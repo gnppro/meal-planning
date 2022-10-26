@@ -5,8 +5,9 @@ import {
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import './styles/index.scss';
+import { register } from '../firebase/useAuth';
 
-const Schema = yup.object({
+const schema = yup.object({
   email: yup
     .string('Enter you email')
     .email('Enter a valid email')
@@ -18,26 +19,39 @@ const Schema = yup.object({
 });
 
 function SignIp() {
+  const [user, setUser] = React.useState('');
+
   const formik = useFormik({
     initialValues: {
+      name: '',
       email: '',
       password: '',
     },
-    validationSchema: Schema,
-    onSubmit: (values) => {
+    validationSchema: schema,
+    onSubmit: async ({ name, email, password }, formikHelpers) => {
+      const nameWithoutSpaces = name.trim();
       try {
-        console.log(values);
+        // const userCredentials = await createUser(values.email, values.password);
+        // await updateName(values.name);
+        const userCredentials = await register(nameWithoutSpaces, email, password);
+        setUser(userCredentials);
+        formikHelpers.resetForm();
+        alert('Cuenta creada exitosamente');
       } catch (error) {
+        alert('Todo se derrumboo');
         console.log(error);
       }
     },
   });
+
+  console.log(user);
 
   return (
     <Stack sx={{
       height: '100vh', width: '100vw', justifyContent: 'center', alignItems: 'center',
     }}
     >
+      <h2>Register</h2>
       <form onSubmit={formik.handleSubmit} className="form__container register">
         <TextField
           id="name"

@@ -2,6 +2,7 @@ import React from 'react';
 import { red } from '@mui/material/colors';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import './App.css';
+import SignUp from './pages/SignUpPage';
 
 const theme = createTheme({
   pallete: {
@@ -14,7 +15,8 @@ const theme = createTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <div className="App" />
+      <SignUp />
+      {/* <div className="App" /> */}
     </ThemeProvider>
   );
 }
