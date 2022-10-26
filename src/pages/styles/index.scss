@@ -1,0 +1,29 @@
+@mixin FormContainer {
+  height: 50%;
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: center;
+  justify-content: center;
+  background-color: antiquewhite;
+  border-radius: 1rem;
+}
+
+.form__container {
+  @include FormContainer()
+}
+
+// .register {
+//   height: 60%;
+// }
+
+p{
+  margin: 0;
+  margin-bottom: -30px;
+}
+
+.link{
+  text-decoration: none;
+  color: rgb(4, 163, 237);
+}
