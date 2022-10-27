@@ -1,4 +1,7 @@
-import React from 'react';
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable react/prop-types */
+/* eslint-disable jsx-a11y/aria-role */
+import React, { useRef } from 'react';
 import {
   Stack, TextField, Button, Box, Checkbox, FormControlLabel,
 } from '@mui/material';
@@ -6,6 +9,12 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import './styles/index.scss';
 import { register } from '../firebase/useAuth';
+
+function Alert(props) {
+  return (
+    <div>{props.msg}</div>
+  );
+}
 
 const schema = yup.object({
   email: yup
@@ -19,7 +28,9 @@ const schema = yup.object({
 });
 
 function SignIp() {
-  const [user, setUser] = React.useState('');
+  const msgRef = useRef('');
+  // const [user, setUser] = React.useState('');
+  // const [msg, setMsg] = React.useState('');
 
   const formik = useFormik({
     initialValues: {
@@ -31,20 +42,16 @@ function SignIp() {
     onSubmit: async ({ name, email, password }, formikHelpers) => {
       const nameWithoutSpaces = name.trim();
       try {
-        // const userCredentials = await createUser(values.email, values.password);
-        // await updateName(values.name);
-        const userCredentials = await register(nameWithoutSpaces, email, password);
-        setUser(userCredentials);
-        formikHelpers.resetForm();
-        alert('Cuenta creada exitosamente');
+        await register(nameWithoutSpaces, email, password);
+        msgRef.current = 'Registrado';
       } catch (error) {
-        alert('Todo se derrumboo');
-        console.log(error);
+        if (error.code === 'auth/email-already-in-use') {
+          msgRef.current = 'Email already in use';
+        }
       }
+      formikHelpers.resetForm();
     },
   });
-
-  console.log(user);
 
   return (
     <Stack sx={{
@@ -77,6 +84,7 @@ function SignIp() {
           id="password"
           name="password"
           label="Password"
+          type="password"
           value={formik.values.password}
           onChange={formik.handleChange}
           error={formik.touched.password && Boolean(formik.errors.password)}
@@ -85,8 +93,9 @@ function SignIp() {
         />
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <FormControlLabel control={<Checkbox defaultChecked size="small" sx={{ padding: '3px', width: 'auto' }} />} label="Remember me" sx={{ fontSize: '13px' }} />
-          <Button color="primary" variant="contained" type="submit">SigUp</Button>
+          <Button role="button-register" color="primary" variant="contained" type="submit">SigUp</Button>
         </Box>
+        {msgRef.current && <Alert msg={msgRef.current} />}
       </form>
     </Stack>
   );
