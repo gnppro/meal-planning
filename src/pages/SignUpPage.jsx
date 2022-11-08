@@ -5,9 +5,9 @@ import React, { useRef } from 'react';
 import {
   Stack, TextField, Button, Box, Checkbox, FormControlLabel,
 } from '@mui/material';
-import { useFormik } from 'formik';
 import * as yup from 'yup';
 import './styles/index.scss';
+import { useFormik } from 'formik';
 import { register } from '../firebase/useAuth';
 
 function Alert(props) {
@@ -27,7 +27,7 @@ const schema = yup.object({
     .required('The password is required'),
 });
 
-function SignIp() {
+function SignUp() {
   const msgRef = useRef('');
   // const [user, setUser] = React.useState('');
   // const [msg, setMsg] = React.useState('');
@@ -101,4 +101,4 @@ function SignIp() {
   );
 }
 
-export default SignIp;
+export default SignUp;
